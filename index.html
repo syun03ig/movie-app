@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CINEMA ARCHIVE | STAGE 04</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- ヘッダー -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fa-solid fa-film"></i>
+        <span>CINEMA ARCHIVE</span>
+      </div>
+
+      <!-- 検索バー -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="映画・アニメを検索...">
+      </div>
+
+      <!-- 右側アクション（言語切り替え ＆ お気に入り） -->
+      <div class="nav-actions">
+        <button id="lang-btn" class="lang-btn"><i class="fa-solid fa-globe"></i> <span id="current-lang">JP</span></button>
+        <button id="fav-tab-btn" class="fav-btn">
+          <i class="fa-solid fa-heart"></i> お気に入り (<span id="fav-count">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="main-container">
+    
+    <!-- フィルター ＆ ナビゲーション -->
+    <section class="controls-section">
+      <div class="tab-group">
+        <button id="tab-trending" class="filter-btn active">トレンド</button>
+        <button id="tab-top-rated" class="filter-btn">高評価作品</button>
+      </div>
+
+      <!-- ジャンルフィルター -->
+      <div class="genre-select-wrapper">
+        <select id="genre-select">
+          <option value="">すべてのジャンル</option>
+          <!-- JSで動的追加 -->
+        </select>
+      </div>
+    </section>
+
+    <!-- タイトル -->
+    <h2 id="section-title" class="section-title">人気の映画・アニメ</h2>
+
+    <!-- 映画カードグリッド -->
+    <div id="movie-grid" class="movie-grid">
+    </div>
+
+    <!--FAQ-->
+    <section class="faq-section">
+      <h2 class="faq-title"><i class="fa-solid fa-circle-question"></i> よくある質問 (FAQ)</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <button class="faq-question">このサイトのデータはどこから取得していますか？ <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>TMDb (The Movie Database) API を使用して、最新の映画・アニメ・TV番組の情報をリアルタイムに取得しています。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">お気に入り機能はログインなしで保持されますか？ <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>はい。ブラウザのローカルストレージ（localStorage）を活用しているため、ページを閉じたり再訪問してもデータが保持されます。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">言語切り替えはどのように動作しますか？ <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>ヘッダーの「JP/EN」ボタンを押すことで、APIのリクエスト言語パラメータを切り替え、タイトルやあらすじを瞬時に再取得します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 映画詳細モーダル -->
+  <div id="movie-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button id="close-modal" class="close-btn">&times;</button>
+      <div id="modal-body" class="modal-body">
+        
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
