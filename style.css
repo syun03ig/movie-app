@@ -1,1 +1,389 @@
+/* ==========================================
+   RESET & BASE STYLES
+========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: 'Poppins', 'Noto Sans JP', sans-serif;
+  background-color: #0f0f12;
+  color: #f1f1f1;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   HEADER / NAVBAR
+========================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 15, 18, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #e50914; /* シネマティックレッド */
+  letter-spacing: 1px;
+}
+
+/* 検索バー */
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.4rem;
+  background: #1a1a20;
+  border: 1px solid #333;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+}
+
+/* ナビゲーションボタン */
+.nav-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.lang-btn, .fav-btn {
+  background: #1a1a20;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.lang-btn:hover, .fav-btn:hover {
+  background: #282830;
+  border-color: #e50914;
+}
+
+/* ==========================================
+   MAIN CONTENT & FILTERS
+========================================== */
+.main-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tab-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.filter-btn.active, .filter-btn:hover {
+  color: #fff;
+  border-bottom-color: #e50914;
+}
+
+.genre-select-wrapper select {
+  background: #1a1a20;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #e50914;
+  padding-left: 0.8rem;
+}
+
+/* ==========================================
+   MOVIE GRID & CARDS
+========================================== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.movie-card {
+  background: #16161c;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+.poster-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #222;
+}
+
+.poster-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* お気に入りハートボタン */
+.fav-heart-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.fav-heart-btn.active {
+  color: #e50914;
+}
+
+.movie-info {
+  padding: 0.8rem;
+}
+
+.movie-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.4rem;
+}
+
+.movie-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+/* 評価スコアの色切り替え */
+.score {
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #222;
+}
+
+.score.high { color: #ffd700; }  /* 金（8点以上） */
+.score.mid { color: #2ed573; }   /* 緑（6点以上） */
+.score.low { color: #ff4757; }   /* 赤（6点未満） */
+
+/* ==========================================
+   FAQ SECTION
+========================================== */
+.faq-section {
+  margin-top: 5rem;
+  background: #141419;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #222;
+}
+
+.faq-title {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.faq-item {
+  border-bottom: 1px solid #222;
+  margin-bottom: 0.5rem;
+}
+
+.faq-question {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ddd;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  padding: 1rem 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: #888;
+  font-size: 0.88rem;
+  padding-bottom: 0;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 200px;
+  padding-bottom: 1rem;
+}
+
+.faq-item.open .faq-question i {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+/* ==========================================
+   MODAL (POPUP)
+========================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-content {
+  background: #181820;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.modal-backdrop {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.modal-details {
+  padding: 1.5rem;
+}
+
+.video-container {
+  margin-top: 1.5rem;
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9比率 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
