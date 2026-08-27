@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 // API FETCH FUNCTIONS
 // ==========================================
-// 映画データの取得（カテゴリ/検索）
 async function fetchMovies(query = '') {
   let endpoint = '';
   
@@ -62,7 +61,6 @@ async function fetchMovies(query = '') {
   }
 }
 
-// ジャンル一覧の取得
 async function fetchGenres() {
   try {
     const res = await fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=${currentLang}`);
@@ -73,7 +71,6 @@ async function fetchGenres() {
   }
 }
 
-// 予告編（YouTube）キーの取得
 async function fetchTrailerKey(movieId) {
   try {
     const res = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}&language=${currentLang}`);
@@ -104,7 +101,6 @@ function renderMovies(movies) {
     const isFav = favorites.some(f => f.id === movie.id);
     const vote = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
     
-    // スコアに応じたカラー判定
     let scoreClass = 'low';
     if (movie.vote_average >= 8.0) scoreClass = 'high';
     else if (movie.vote_average >= 6.0) scoreClass = 'mid';
@@ -127,13 +123,11 @@ function renderMovies(movies) {
       </div>
     `;
 
-    // カードクリックで詳細表示
     card.addEventListener('click', (e) => {
-      if (e.target.closest('.fav-heart-btn')) return; // お気に入り押下時はモーダルを開かない
+      if (e.target.closest('.fav-heart-btn')) return;
       openModal(movie);
     });
 
-    // お気に入りボタン押下時
     const heartBtn = card.querySelector('.fav-heart-btn');
     heartBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -144,7 +138,6 @@ function renderMovies(movies) {
   });
 }
 
-// モーダル（詳細画面）オープン
 async function openModal(movie) {
   const backdropPath = movie.backdrop_path 
     ? `${BACKDROP_BASE_URL}${movie.backdrop_path}` 
@@ -184,7 +177,7 @@ function toggleFavorite(movie) {
 
   if (currentCategory === 'favorites') {
     renderMovies(favorites);
-  } else if (currentCategory === 'genre' && genreSelect.value) {
+  } else if (currentCategory === 'genre' && genreSelect.value !== '') {
     fetchGenreMovies(genreSelect.value);
   } else {
     fetchMovies(searchInput.value.trim());
@@ -203,7 +196,7 @@ function populateGenreSelect(genres) {
   genreSelect.innerHTML = `<option value="">${currentLang === 'ja-JP' ? 'すべてのジャンル' : 'All Genres'}</option>`;
   genres.forEach(genre => {
     const option = document.createElement('option');
-    option.value = genre.id;
+    option.value = String(genre.id);
     option.textContent = genre.name;
     genreSelect.appendChild(option);
   });
@@ -235,7 +228,6 @@ function setupFAQ() {
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
-// 検索窓入力（ENTER押下で実行）
 searchInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     const query = searchInput.value.trim();
@@ -248,7 +240,6 @@ searchInput.addEventListener('keypress', (e) => {
   }
 });
 
-// トレンドタブ
 tabTrending.addEventListener('click', () => {
   currentCategory = 'trending';
   tabTrending.classList.add('active');
@@ -259,7 +250,6 @@ tabTrending.addEventListener('click', () => {
   fetchMovies();
 });
 
-// 高評価タブ
 tabTopRated.addEventListener('click', () => {
   currentCategory = 'top-rated';
   tabTopRated.classList.add('active');
@@ -270,7 +260,6 @@ tabTopRated.addEventListener('click', () => {
   fetchMovies();
 });
 
-// お気に入りタブ
 favTabBtn.addEventListener('click', () => {
   currentCategory = 'favorites';
   tabTrending.classList.remove('active');
@@ -280,10 +269,11 @@ favTabBtn.addEventListener('click', () => {
   renderMovies(favorites);
 });
 
-// ジャンル選択時の絞り込み処理
+// 修正ポイント：空文字判定を確実に実行
 genreSelect.addEventListener('change', (e) => {
   const selectedGenreId = e.target.value;
-  if (!selectedGenreId) {
+  
+  if (selectedGenreId === '' || selectedGenreId === null) {
     currentCategory = 'trending';
     tabTrending.classList.add('active');
     tabTopRated.classList.remove('active');
@@ -297,7 +287,6 @@ genreSelect.addEventListener('change', (e) => {
   }
 });
 
-// 多言語切り替え（JP / EN）
 langBtn.addEventListener('click', () => {
   if (currentLang === 'ja-JP') {
     currentLang = 'en-US';
@@ -309,14 +298,13 @@ langBtn.addEventListener('click', () => {
   fetchGenres();
   if (currentCategory === 'favorites') {
     renderMovies(favorites);
-  } else if (currentCategory === 'genre' && genreSelect.value) {
+  } else if (currentCategory === 'genre' && genreSelect.value !== '') {
     fetchGenreMovies(genreSelect.value);
   } else {
     fetchMovies(searchInput.value.trim());
   }
 });
 
-// モーダル閉じる
 closeModal.addEventListener('click', () => modal.classList.add('hidden'));
 modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.classList.add('hidden');
