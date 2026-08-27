@@ -7,7 +7,7 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_BASE_URL = 'https://image.tmdb.org/t/p/w1280';
 
 let currentLang = 'ja-JP'; // デフォルトは日本語 ('ja-JP' or 'en-US')
-let currentCategory = 'trending'; // 'trending', 'top-rated', 'search', 'favorites'
+let currentCategory = 'trending'; // 'trending', 'top-rated', 'search', 'favorites', 'genre'
 let favorites = JSON.parse(localStorage.getItem('cinema_favs')) || [];
 
 // ==========================================
@@ -184,6 +184,8 @@ function toggleFavorite(movie) {
 
   if (currentCategory === 'favorites') {
     renderMovies(favorites);
+  } else if (currentCategory === 'genre' && genreSelect.value) {
+    fetchGenreMovies(genreSelect.value);
   } else {
     fetchMovies(searchInput.value.trim());
   }
@@ -197,6 +199,7 @@ function updateFavCount() {
 // GENRE & FAQ LOGIC
 // ==========================================
 function populateGenreSelect(genres) {
+  const currentVal = genreSelect.value;
   genreSelect.innerHTML = `<option value="">${currentLang === 'ja-JP' ? 'すべてのジャンル' : 'All Genres'}</option>`;
   genres.forEach(genre => {
     const option = document.createElement('option');
@@ -204,6 +207,19 @@ function populateGenreSelect(genres) {
     option.textContent = genre.name;
     genreSelect.appendChild(option);
   });
+  genreSelect.value = currentVal;
+}
+
+async function fetchGenreMovies(genreId) {
+  try {
+    const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=${currentLang}&with_genres=${genreId}`);
+    const data = await res.json();
+    const genreName = genreSelect.options[genreSelect.selectedIndex].text;
+    sectionTitle.textContent = `${genreName}`;
+    renderMovies(data.results || []);
+  } catch (error) {
+    console.error('Genre Movies Fetch Error:', error);
+  }
 }
 
 function setupFAQ() {
@@ -225,6 +241,7 @@ searchInput.addEventListener('keypress', (e) => {
     const query = searchInput.value.trim();
     if (query) {
       currentCategory = 'search';
+      genreSelect.value = '';
       sectionTitle.textContent = currentLang === 'ja-JP' ? `検索結果: "${query}"` : `Search Results: "${query}"`;
       fetchMovies(query);
     }
@@ -236,6 +253,7 @@ tabTrending.addEventListener('click', () => {
   currentCategory = 'trending';
   tabTrending.classList.add('active');
   tabTopRated.classList.remove('active');
+  genreSelect.value = '';
   sectionTitle.textContent = currentLang === 'ja-JP' ? '人気の映画・アニメ' : 'Trending Movies';
   searchInput.value = '';
   fetchMovies();
@@ -246,6 +264,7 @@ tabTopRated.addEventListener('click', () => {
   currentCategory = 'top-rated';
   tabTopRated.classList.add('active');
   tabTrending.classList.remove('active');
+  genreSelect.value = '';
   sectionTitle.textContent = currentLang === 'ja-JP' ? '歴代の高評価作品' : 'Top Rated Movies';
   searchInput.value = '';
   fetchMovies();
@@ -256,8 +275,26 @@ favTabBtn.addEventListener('click', () => {
   currentCategory = 'favorites';
   tabTrending.classList.remove('active');
   tabTopRated.classList.remove('active');
+  genreSelect.value = '';
   sectionTitle.textContent = currentLang === 'ja-JP' ? 'お気に入り作品' : 'Your Favorites';
   renderMovies(favorites);
+});
+
+// ジャンル選択時の絞り込み処理
+genreSelect.addEventListener('change', (e) => {
+  const selectedGenreId = e.target.value;
+  if (!selectedGenreId) {
+    currentCategory = 'trending';
+    tabTrending.classList.add('active');
+    tabTopRated.classList.remove('active');
+    sectionTitle.textContent = currentLang === 'ja-JP' ? '人気の映画・アニメ' : 'Trending Movies';
+    fetchMovies();
+  } else {
+    currentCategory = 'genre';
+    tabTrending.classList.remove('active');
+    tabTopRated.classList.remove('active');
+    fetchGenreMovies(selectedGenreId);
+  }
 });
 
 // 多言語切り替え（JP / EN）
@@ -272,6 +309,8 @@ langBtn.addEventListener('click', () => {
   fetchGenres();
   if (currentCategory === 'favorites') {
     renderMovies(favorites);
+  } else if (currentCategory === 'genre' && genreSelect.value) {
+    fetchGenreMovies(genreSelect.value);
   } else {
     fetchMovies(searchInput.value.trim());
   }
@@ -281,24 +320,4 @@ langBtn.addEventListener('click', () => {
 closeModal.addEventListener('click', () => modal.classList.add('hidden'));
 modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.classList.add('hidden');
-});
-// ジャンル選択時の絞り込み処理
-genreSelect.addEventListener('change', (e) => {
-  const selectedGenreId = e.target.value;
-  const cards = document.querySelectorAll('.movie-card');
-
-  // すべてのジャンルが選ばれた場合は全表示
-  if (!selectedGenreId) {
-    cards.forEach(card => card.style.display = 'block');
-    return;
-  }
-
-  // 選択されたジャンルが含まれる映画のみ表示
-  // ※取得済みデータから絞り込む処理
-  fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=${currentLang}&with_genres=${selectedGenreId}`)
-    .then(res => res.json())
-    .then(data => {
-      sectionTitle.textContent = `${genreSelect.options[genreSelect.selectedIndex].text} 一覧`;
-      renderMovies(data.results || []);
-    });
 });
