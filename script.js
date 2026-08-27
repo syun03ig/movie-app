@@ -282,3 +282,23 @@ closeModal.addEventListener('click', () => modal.classList.add('hidden'));
 modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.classList.add('hidden');
 });
+// ジャンル選択時の絞り込み処理
+genreSelect.addEventListener('change', (e) => {
+  const selectedGenreId = e.target.value;
+  const cards = document.querySelectorAll('.movie-card');
+
+  // すべてのジャンルが選ばれた場合は全表示
+  if (!selectedGenreId) {
+    cards.forEach(card => card.style.display = 'block');
+    return;
+  }
+
+  // 選択されたジャンルが含まれる映画のみ表示
+  // ※取得済みデータから絞り込む処理
+  fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=${currentLang}&with_genres=${selectedGenreId}`)
+    .then(res => res.json())
+    .then(data => {
+      sectionTitle.textContent = `${genreSelect.options[genreSelect.selectedIndex].text} 一覧`;
+      renderMovies(data.results || []);
+    });
+});
