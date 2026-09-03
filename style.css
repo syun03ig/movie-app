@@ -387,3 +387,37 @@ body {
   height: 100%;
   border: 0;
 }
+/* スマホ表示時のレイアウト調整 (画面幅 768px 以下) */
+@media (max-width: 768px) {
+  /* 映画カードのグリッドを横3列に変更 */
+  .movie-grid, 
+  .grid-container, 
+  .card-container { /* ※実際クラス名に合わせて調整 */
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* 横に3つ並べる */
+    gap: 10px !important; /* カード同士の間隔を少し狭くして収まりを良くする */
+  }
+
+  /* カード内の文字サイズや余白をスマホ用に最適化 */
+  .movie-card h3,
+  .card-title {
+    font-size: 0.75rem !important; /* タイトル文字を少し小さく */
+  }
+
+  .movie-card .info,
+  .card-info {
+    font-size: 0.65rem !important;
+    padding: 6px !important;
+  }
+}
+
+/* さらに画面が小さいスマホ (幅 480px 以下) で3つだと厳しい場合の微調整 */
+@media (max-width: 480px) {
+  .movie-grid, 
+  .grid-container, 
+  .card-container {
+    /* もし3列だと小さすぎて見づらい場合は『repeat(2, 1fr)』(2列) に変更してください */
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+}
